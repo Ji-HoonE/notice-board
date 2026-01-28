@@ -1,10 +1,9 @@
-import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './App.tsx'
+import { router } from '@/app/router'
+import { Providers } from '@/app/providers'
+import { queryClient } from '@/shared/api/query-client'
+
 
 createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
+  <Providers router={router} client={queryClient} />
 )
