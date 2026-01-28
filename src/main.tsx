@@ -1,3 +1,4 @@
+import './index.css'
 import { createRoot } from 'react-dom/client'
 import { router } from '@/app/router'
 import { Providers } from '@/app/providers'
