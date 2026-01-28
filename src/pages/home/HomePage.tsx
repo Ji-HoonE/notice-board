@@ -1,13 +1,9 @@
-import { useCommonAction } from "@/shared/model/common.store"
+import PostList from "@/features/post/ui/PostList"
 
 const HomePage = () => {
-    const { removeToken } = useCommonAction()
     return (
-        <div>
-            <h1>HomePage</h1>
-            <button onClick={() => {
-                removeToken()
-            }}>Logout</button>
+        <div className="h-full">
+            <PostList />
         </div>
     )
 }

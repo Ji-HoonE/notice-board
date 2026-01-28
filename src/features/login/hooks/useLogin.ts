@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react"
-import { loginSchema, type LoginFormData } from "../type/type"
+import { loginSchema, type LoginFormData } from "../model/login.type"
 import { useForm, type SubmitHandler } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useLoginMutation } from "@/entities/login/query/login.query"
@@ -37,7 +37,7 @@ const useLogin = () => {
         try {
             const res = await mutateAsync(data)
             setToken(res.token)
-            navigate(ROUTER_PATH.HOME)
+            navigate(ROUTER_PATH.POSTS)
         } catch (error) {
             let errorMessage = '로그인에 실패했습니다. 다시 시도해주세요.'
             if (error instanceof AxiosError) {

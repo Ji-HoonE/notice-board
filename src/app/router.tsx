@@ -1,8 +1,10 @@
-import HomePage from "@/pages/home/HomePage"
 import LoginPage from "@/pages/login/LoginPage"
-import { ROUTER_PATH } from "@/shared/constants/path.constants"
 import AuthGuard from "@/shared/lib/AuthGuard"
+import ErrorBoundary from "@/shared/lib/ErrorBoundary"
+import { ROUTER_PATH } from "@/shared/constants/path.constants"
 import { createBrowserRouter, Navigate } from "react-router"
+import PostsPage from "@/pages/posts/PostsPage"
+import DataPage from "@/pages/data/DataPage"
 
 export const router = createBrowserRouter([
     {
@@ -14,7 +16,18 @@ export const router = createBrowserRouter([
         element: <LoginPage />,
     },
     {
-        path: ROUTER_PATH.HOME,
-        element: <AuthGuard><HomePage /></AuthGuard>,
-    }
+        element: <AuthGuard />,
+        children: [
+            {
+                path: ROUTER_PATH.DATA,
+                element: <DataPage />,
+            },
+            {
+                path: ROUTER_PATH.POSTS,
+                element: <PostsPage />,
+                errorElement: <ErrorBoundary />,
+            },
+
+        ],
+    },
 ])

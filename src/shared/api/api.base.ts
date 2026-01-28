@@ -1,5 +1,6 @@
 import axios from 'axios'
 import type { AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } from 'axios'
+import { useCommonStore } from '../model/common.store'
 
 const apiInstance = axios.create({
     baseURL: import.meta.env.VITE_API_BASE_URL,
@@ -14,7 +15,7 @@ const apiInstance = axios.create({
  */
 apiInstance.interceptors.request.use(
     (config: InternalAxiosRequestConfig) => {
-        const token = localStorage.getItem('token') || localStorage.getItem('accessToken')
+        const token = useCommonStore.getState().token
         if (token && config.headers) {
             config.headers.Authorization = `Bearer ${token}`
         }

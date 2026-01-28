@@ -1,7 +1,7 @@
 import { z } from 'zod'
 
 /**
- * @description 로그인 폼 밸리데이션 스키마
+ * @description 로그인 폼 스키마
  */
 export const loginSchema = z.object({
     email: z
