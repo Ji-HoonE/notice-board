@@ -30,7 +30,7 @@ const PostListFilter = ({ register }: IPostListFilterProps) => {
                 onConfirm: async () => {
                     const res = await deleteAllPosts()
                     if (res.ok) {
-                        queryClient.invalidateQueries({ queryKey: ['postList'] })
+                        queryClient.invalidateQueries({ queryKey: ['post', 'list'] })
                         closeModal('confirm')
                     }
                 },

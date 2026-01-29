@@ -67,7 +67,7 @@ const PostTable = ({ filterOptions }: IPostTableProps) => {
                 onConfirm: async () => {
                     const res = await deletePost(postId)
                     if (res.ok) {
-                        queryClient.invalidateQueries({ queryKey: ['postList'] })
+                        queryClient.invalidateQueries({ queryKey: ['post, list'] })
                         closeModal('confirm')
                     }
                 },
