@@ -1,6 +1,7 @@
 import LoginPage from "@/pages/login/LoginPage"
 import AuthGuard from "@/shared/lib/AuthGuard"
-import ErrorBoundary from "@/shared/lib/ErrorBoundary"
+import PostErrorBoundary from "@/shared/lib/PostErrorBoundary"
+import ChartErrorBoundary from "@/shared/lib/ChartErrorBoundary"
 import { ROUTER_PATH } from "@/shared/constants/path.constants"
 import { createBrowserRouter, Navigate } from "react-router"
 import PostsPage from "@/pages/posts/PostsPage"
@@ -21,11 +22,12 @@ export const router = createBrowserRouter([
             {
                 path: ROUTER_PATH.CHARTS,
                 element: <ChartsPage />,
+                errorElement: <ChartErrorBoundary />,
             },
             {
                 path: ROUTER_PATH.POSTS,
                 element: <PostsPage />,
-                errorElement: <ErrorBoundary />,
+                errorElement: <PostErrorBoundary />,
             },
         ],
     },
