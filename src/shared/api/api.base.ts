@@ -27,6 +27,22 @@ apiInstance.interceptors.request.use(
 )
 
 /**
+ * @description Response 인터셉터: 401 시 토큰 삭제 (로그인 요청 제외)
+ */
+apiInstance.interceptors.response.use(
+    (response) => response,
+    (error) => {
+        if (error.response?.status === 401) {
+            const isLoginRequest = error.config?.url?.includes('/auth/login')
+            if (!isLoginRequest) {
+                useCommonStore.getState().removeToken()
+            }
+        }
+        return Promise.reject(error)
+    }
+)
+
+/**
  * @description API 요청 헬퍼 클래스
  */
 export const ApiHelper = {
