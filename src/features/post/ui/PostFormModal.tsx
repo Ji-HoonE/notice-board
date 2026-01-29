@@ -3,12 +3,16 @@ import usePostForm from '../hooks/usePostForm'
 import { CATEGORY_OPTIONS } from '@/shared/constants/post.constants'
 import { useModalActions } from '@/shared/model/modal.store'
 
-interface PostFormModalProps {
+interface IPostFormModalProps {
     postId: string
 }
-
-const PostFormModal = ({ postId }: PostFormModalProps) => {
+/**
+ * @description 게시글 폼 모달 컴포넌트
+ */
+const PostFormModal = ({ postId }: IPostFormModalProps) => {
+    /** 모달 닫기 액션 */
     const { closeModal } = useModalActions()
+    /** 게시글 폼 커스텀 훅 */
     const { register, handleSubmit, errors, isValid, handleAddTag, handleRemoveTag, tagInput, tags, setTagInput, isLoading } =
         usePostForm(postId)
     return (

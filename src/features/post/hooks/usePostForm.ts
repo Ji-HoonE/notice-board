@@ -4,10 +4,7 @@ import { postFormSchema, type PostFormData } from "../model/post.type"
 import { useCreatePostMutation, usePostDetailQuery, useUpdatePostMutation } from "@/entities/post/query/post.query"
 import { useQueryClient } from "@tanstack/react-query"
 import { useState } from "react"
-import { postQueryKeys } from "@/entities/post/model/post.queryKey"
 import { useModalActions } from "@/shared/model/modal.store"
-
-
 
 
 /**
@@ -67,23 +64,17 @@ const usePostForm = (id: string) => {
         const next = tags.filter((t: string) => t !== removeTag)
         setValue('tags', next, { shouldValidate: true, shouldDirty: true })
     }
-
+    /** 게시글 폼 제출 핸들러 */
     const onSubmit = async (data: PostFormData) => {
         try {
             const isEdit = id !== ''
             const response = isEdit
                 ? await updatePost({ id, ...data })
                 : await createPost(data)
+
             if (response.id) {
                 await queryClient.invalidateQueries({
-                    queryKey: postQueryKeys.list({
-                        limit: 10,
-                        prevCursor: 0,
-                        nextCursor: '',
-                        from: '',
-                        to: '',
-                        search: '',
-                    }).queryKey,
+                    queryKey: ['post', 'list'],
                 })
                 closeModal('postForm')
             }

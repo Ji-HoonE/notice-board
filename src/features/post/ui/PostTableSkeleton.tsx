@@ -1,16 +1,18 @@
 import { POST_TABLE_COLUMNS } from "@/shared/constants/post.constants"
 
+const columnWidths: Record<string, number> = {
+    title: 25,
+    body: 60,
+    category: 15,
+    userId: 25,
+    createdAt: 15,
+    actions: 15,
+    tags: 40,
+}
+/**
+ * @description 게시판 목록 스켈레톤 컴포넌트
+ */
 const PostTableSkeleton = () => {
-    const columnWidths: Record<string, number> = {
-        title: 25,
-        body: 60,
-        category: 15,
-        userId: 25,
-        createdAt: 15,
-        actions: 15,
-        tags: 40,
-    }
-
     return (
         <div className="w-full h-full flex flex-col">
             <div className="flex items-center gap-2 mb-4 justify-between">

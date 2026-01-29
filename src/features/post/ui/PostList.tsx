@@ -4,9 +4,11 @@ import PostTableSkeleton from './PostTableSkeleton'
 import PostListFilter from './PostListFilter'
 import usePostListFilter from '../hooks/usePostListFilter'
 
+/**
+ * @description 게시판 목록 컴포넌트
+ */
 const PostList = () => {
     const { filterOptions, register } = usePostListFilter()
-
     return (
         <div className="w-full h-full flex flex-col space-y-5">
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 flex-shrink-0">

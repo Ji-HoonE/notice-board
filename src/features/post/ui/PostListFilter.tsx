@@ -104,7 +104,7 @@ const PostListFilter = ({ register }: IPostListFilterProps) => {
                     className="inline-flex items-center justify-center px-6 py-2.5 text-sm font-semibold text-red-600 bg-red-50 border border-red-200 rounded-xl hover:bg-red-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2"
                     onClick={handleDeleteAllPosts}
                 >
-                    모든 포스트 삭제
+                    모두 삭제
                 </button>
             </div>
         </div >

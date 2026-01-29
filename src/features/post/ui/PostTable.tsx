@@ -11,12 +11,16 @@ import { useQueryClient } from "@tanstack/react-query"
 interface IPostTableProps {
     filterOptions: PostListFilterData
 }
+/**
+ * @description 게시판 목록 컴포넌트
+ */
 const PostTable = ({ filterOptions }: IPostTableProps) => {
     const queryClient = useQueryClient()
-    /** 다음 페이지 로드 참조 */
+    /** 다음 페이지 로드 참조 (하단) */
     const loadMoreRef = useRef<HTMLDivElement | null>(null)
     /** 모달 액션 */
     const { openModal, closeModal } = useModalActions()
+
     /** 게시물 목록 조회 */
     const {
         data,
@@ -79,7 +83,7 @@ const PostTable = ({ filterOptions }: IPostTableProps) => {
         [items.length]
     )
 
-    /** 다음 페이지 데이터 로드 */
+    /** 다음 페이지 데이터 로드 (하단 스크롤) */
     useEffect(() => {
         if (!loadMoreRef.current || !hasNextPage) return
         const observer = new IntersectionObserver(
@@ -94,9 +98,9 @@ const PostTable = ({ filterOptions }: IPostTableProps) => {
             }
         )
         observer.observe(loadMoreRef.current)
-
         return () => observer.disconnect()
     }, [fetchNextPage, hasNextPage, isFetchingNextPage, tableRef])
+
 
 
     return (

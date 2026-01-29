@@ -1,18 +1,13 @@
 import type { ICreatePostRequest, IPostListRequest, IUpdatePostRequest } from "../model/post.type";
 import { postQueryKeys } from "../model/post.queryKey";
 import { postApi } from "../api/post.api";
-import { useMutation, useQuery, useSuspenseInfiniteQuery, useSuspenseQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useSuspenseInfiniteQuery } from "@tanstack/react-query";
+
+
 
 /**
- * @description 게시글 목록 조회 쿼리
+ * @description 게시글 목록 무한 조회 쿼리
  */
-export const usePostListQuery = (params: IPostListRequest) => {
-    return useSuspenseQuery({
-        queryKey: postQueryKeys.list(params).queryKey,
-        queryFn: () => postApi.getPostList(params),
-    });
-};
-
 export const usePostListInfiniteQuery = (
     params: Omit<IPostListRequest, 'prevCursor' | 'nextCursor'>
 ) => {

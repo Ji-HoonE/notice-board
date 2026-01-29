@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm, useWatch } from "react-hook-form"
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { postListFilterSchema, type PostListFilterData } from "../model/post.type"
 
 /**
@@ -35,13 +35,16 @@ const usePostListFilter = () => {
         }
     }, [search])
 
-    const filterOptions: PostListFilterData = {
-        search: debouncedSearch,
-        sort,
-        order,
-        category,
-        date,
-    }
+    const filterOptions = useMemo(() => {
+        return {
+            search: debouncedSearch,
+            sort,
+            order,
+            category,
+            date,
+        }
+    }, [debouncedSearch, sort, order, category, date])
+
     return {
         filterOptions,
         register,
