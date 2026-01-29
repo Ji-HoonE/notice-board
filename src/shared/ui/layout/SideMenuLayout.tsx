@@ -15,7 +15,7 @@ const SideMenuLayout = ({ children }: AdminLayoutProps) => {
 
     const menuItems = [
         { path: ROUTER_PATH.POSTS, label: '게시판', icon: AiOutlineFileText },
-        { path: ROUTER_PATH.DATA, label: '데이터', icon: AiOutlineDashboard },
+        { path: ROUTER_PATH.CHARTS, label: '차트', icon: AiOutlineDashboard },
     ]
 
     const handleLogout = () => {
@@ -33,7 +33,7 @@ const SideMenuLayout = ({ children }: AdminLayoutProps) => {
                     aria-label="사이드 네비게이션"
                 >
                     <div className="px-6 py-4 border-b border-gray-800 h-16 flex items-center">
-                        <h1 className="text-xl font-bold text-white">관리자</h1>
+                        <h1 className="text-xl font-bold text-white">메뉴</h1>
                     </div>
                     <nav
                         className="p-4"

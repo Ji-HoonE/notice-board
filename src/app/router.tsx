@@ -4,7 +4,7 @@ import ErrorBoundary from "@/shared/lib/ErrorBoundary"
 import { ROUTER_PATH } from "@/shared/constants/path.constants"
 import { createBrowserRouter, Navigate } from "react-router"
 import PostsPage from "@/pages/posts/PostsPage"
-import DataPage from "@/pages/data/DataPage"
+import ChartsPage from "@/pages/chart/ChartPage"
 
 export const router = createBrowserRouter([
     {
@@ -19,15 +19,14 @@ export const router = createBrowserRouter([
         element: <AuthGuard />,
         children: [
             {
-                path: ROUTER_PATH.DATA,
-                element: <DataPage />,
+                path: ROUTER_PATH.CHARTS,
+                element: <ChartsPage />,
             },
             {
                 path: ROUTER_PATH.POSTS,
                 element: <PostsPage />,
                 errorElement: <ErrorBoundary />,
             },
-
         ],
     },
 ])
