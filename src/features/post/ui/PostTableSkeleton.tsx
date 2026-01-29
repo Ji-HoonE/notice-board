@@ -7,15 +7,18 @@ const PostTableSkeleton = () => {
         category: 15,
         userId: 25,
         createdAt: 15,
-        actions: 100 / POST_TABLE_COLUMNS.length,
+        actions: 15,
+        tags: 40,
     }
 
     return (
         <div className="w-full h-full flex flex-col">
             <div className="flex items-center gap-2 mb-4 justify-between">
-                <div className="flex items-center gap-2 px-4 h-10 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg">
-                    <div className="h-4 w-16 bg-gray-200 rounded animate-pulse" />
-                    <div className="h-4 w-4 bg-gray-200 rounded animate-pulse" />
+                <div className="relative">
+                    <div className="flex items-center gap-2 px-4 h-10 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg">
+                        <div className="h-4 w-16 bg-gray-200 rounded animate-pulse" />
+                        <div className="h-4 w-4 bg-gray-200 rounded-full animate-pulse" />
+                    </div>
                 </div>
             </div>
             <div className="flex-1 flex flex-col overflow-hidden border border-gray-200 rounded-lg bg-white">
@@ -71,11 +74,22 @@ const PostTableSkeleton = () => {
                                                 {column.key === 'createdAt' && (
                                                     <div className="h-4 w-28 bg-gray-200 rounded animate-pulse mx-auto" />
                                                 )}
+                                                {column.key === 'tags' && (
+                                                    <div className="h-4 w-32 bg-gray-200 rounded animate-pulse mx-auto" />
+                                                )}
+                                                {column.key === 'actions' && (
+                                                    <div className="flex items-center justify-center gap-1.5">
+                                                        <div className="h-4 w-4 bg-gray-200 rounded-full animate-pulse" />
+                                                        <div className="h-4 w-4 bg-gray-200 rounded-full animate-pulse" />
+                                                    </div>
+                                                )}
                                                 {column.key !== 'title' &&
                                                     column.key !== 'body' &&
                                                     column.key !== 'category' &&
                                                     column.key !== 'userId' &&
-                                                    column.key !== 'createdAt' && (
+                                                    column.key !== 'createdAt' &&
+                                                    column.key !== 'tags' &&
+                                                    column.key !== 'actions' && (
                                                         <div className="h-4 w-16 bg-gray-200 rounded animate-pulse mx-auto" />
                                                     )}
                                             </td>

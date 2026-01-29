@@ -8,10 +8,10 @@ export const POST_CATEGORIES: [PostCategory, ...PostCategory[]] = ['NOTICE', 'QN
  * @description 게시글 목록 필터 스키마
  */
 export const postListFilterSchema = z.object({
-    search: z.string().optional(),
-    sort: z.enum(['createdAt', 'title']),
-    order: z.enum(['asc', 'desc']),
-    category: z.enum(POST_CATEGORIES),
+    search: z.string(),
+    sort: z.string(),
+    order: z.string(),
+    category: z.string(),
     date: z.string(),
 })
 /**
@@ -30,8 +30,13 @@ export const postFormSchema = z.object({
                 message: '금칙어가 포함되어 있어 등록할 수 없습니다.',
             }
         ),
-    category: z.enum(POST_CATEGORIES),
-    tags: z.array(z.string().max(24, '태그는 24자 이하여야 합니다')).max(5, '태그는 최대 5개까지 추가할 수 있습니다').optional(),
+    category: z
+        .string().min(1, '카테고리를 선택해주세요'),
+    tags: z
+        .array(
+            z.string().max(24, '태그는 24자 이하여야 합니다')
+        )
+        .max(5, '태그는 최대 5개까지 추가할 수 있습니다'),
 })
 
 export type PostListFilterData = z.infer<typeof postListFilterSchema>

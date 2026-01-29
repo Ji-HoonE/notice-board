@@ -4,24 +4,40 @@ import { useColumnResize } from "../hooks/useColumnResize"
 import { CommonUtil } from "@/shared/utils/util"
 import { FaEdit, FaFilter, FaTrash } from "react-icons/fa"
 import useTableHideColumn from "../hooks/useTableHideColumn"
-import { usePostListQuery } from "@/entities/post/query/post.query"
-import { useMemo } from "react"
+import { useDeletePostMutation, usePostListInfiniteQuery } from "@/entities/post/query/post.query"
+import { useEffect, useMemo, useRef } from "react"
+import { useModalActions } from "@/shared/model/modal.store"
+import { useQueryClient } from "@tanstack/react-query"
 interface IPostTableProps {
     filterOptions: PostListFilterData
 }
 const PostTable = ({ filterOptions }: IPostTableProps) => {
+    const queryClient = useQueryClient()
+    /** 다음 페이지 로드 참조 */
+    const loadMoreRef = useRef<HTMLDivElement | null>(null)
+    /** 모달 액션 */
+    const { openModal, closeModal } = useModalActions()
     /** 게시물 목록 조회 */
-    const { data } = usePostListQuery({
-        limit: 10,
-        prevCursor: 0,
-        nextCursor: '',
-        sort: filterOptions.sort,
-        order: filterOptions.order,
-        category: filterOptions.category,
-        from: CommonUtil.getDateISOString(filterOptions.date, '00:00:00.000'),
-        to: CommonUtil.getDateISOString(filterOptions.date, '23:59:59.999'),
+    const {
+        data,
+        fetchNextPage,
+        hasNextPage,
+        isFetchingNextPage,
+    } = usePostListInfiniteQuery({
+        limit: 20,
+        ...(filterOptions.sort && { sort: filterOptions.sort }),
+        ...(filterOptions.order && { order: filterOptions.order }),
+        ...(filterOptions.category && { category: filterOptions.category }),
+        from: `${filterOptions.date}T00:00:00.000`,
+        to: `${filterOptions.date}T23:59:59.999`,
         search: filterOptions.search || '',
     })
+
+    const items = data.pages.flatMap((page) => page.items)
+
+    /** 게시글 삭제 뮤테이션 */
+    const { mutateAsync: deletePost } = useDeletePostMutation()
+
     /** 컬럼 숨김 관리 */
     const { visibleColumnsList, visibleColumns, handleColumnToggle, isColumnFilterOpen, filterRef, setIsColumnFilterOpen } = useTableHideColumn()
 
@@ -34,11 +50,54 @@ const PostTable = ({ filterOptions }: IPostTableProps) => {
             category: 15,
             userId: 25,
             createdAt: 15,
+            actions: 15,
+            tags: 40,
         },
     })
 
+    /** 게시글 삭제 핸들러 */
+    const handleDeletePost = async (postId: string) => {
+        try {
+            openModal('confirm', {
+                description: '게시글을 삭제하시겠습니까?',
+                onConfirm: async () => {
+                    const res = await deletePost(postId)
+                    if (res.ok) {
+                        queryClient.invalidateQueries({ queryKey: ['postList'] })
+                        closeModal('confirm')
+                    }
+                },
+            })
+        } catch (error) {
+            console.error('게시글 삭제 실패:', error)
+        }
+    }
+
     /** 데이터가 없는 경우 */
-    const isEmpty = useMemo(() => (data?.items?.length ?? 0) === 0, [data?.items?.length])
+    const isEmpty = useMemo(
+        () => items.length === 0,
+        [items.length]
+    )
+
+    /** 다음 페이지 데이터 로드 */
+    useEffect(() => {
+        if (!loadMoreRef.current || !hasNextPage) return
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting && !isFetchingNextPage) {
+                    fetchNextPage()
+                }
+            },
+            {
+                root: tableRef.current,
+                threshold: 0.9,
+            }
+        )
+        observer.observe(loadMoreRef.current)
+
+        return () => observer.disconnect()
+    }, [fetchNextPage, hasNextPage, isFetchingNextPage, tableRef])
+
 
     return (
         <div className="w-full h-full flex flex-col">
@@ -133,7 +192,7 @@ const PostTable = ({ filterOptions }: IPostTableProps) => {
                                 ))}
                             </colgroup>
                             <tbody className="bg-white">
-                                {data?.items?.map((post) => (
+                                {items?.map((post) => (
                                     <tr key={post.id} className="hover:bg-blue-50 transition-colors">
                                         {visibleColumnsList.map((column, colIndex) => (
                                             <td
@@ -150,8 +209,22 @@ const PostTable = ({ filterOptions }: IPostTableProps) => {
                                                         {post.body}
                                                     </span>
                                                 )}
+                                                {column.key === 'tags' && (
+                                                    <span
+                                                        className="block truncate text-xs text-blue-800"
+                                                        title={
+                                                            post.tags && post.tags.length > 0
+                                                                ? post.tags.map((tag) => `#${tag}`).join(' ')
+                                                                : ''
+                                                        }
+                                                    >
+                                                        {post.tags && post.tags.length > 0
+                                                            ? post.tags.map((tag) => `#${tag}`).join(' ')
+                                                            : ''}
+                                                    </span>
+                                                )}
                                                 {column.key === 'category' && (
-                                                    <span className="px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded">
+                                                    <span className="text-sm text-black">
                                                         {CommonUtil.getCategoryLabel(post.category)}
                                                     </span>
                                                 )}
@@ -161,23 +234,21 @@ const PostTable = ({ filterOptions }: IPostTableProps) => {
                                                     <div className="flex items-center justify-center gap-1.5">
                                                         <button
                                                             type="button"
-                                                            className="p-1.5 hover:bg-gray-100 rounded transition-colors"
+                                                            className="p-1 cursor-pointer"
                                                             title="수정"
                                                             onClick={() => {
-                                                                console.log('수정:', post.id)
+                                                                openModal('postForm', { postId: post.id })
                                                             }}
                                                         >
-                                                            <FaEdit className="w-3.5 h-3.5 text-green-600" />
+                                                            <FaEdit className="w-3.5 h-3.5 " />
                                                         </button>
                                                         <button
                                                             type="button"
-                                                            className="p-1.5 hover:bg-gray-100 rounded transition-colors"
+                                                            className="p-1 cursor-pointer"
                                                             title="삭제"
-                                                            onClick={() => {
-                                                                console.log('삭제:', post.id)
-                                                            }}
+                                                            onClick={() => handleDeletePost(post.id)}
                                                         >
-                                                            <FaTrash className="w-3.5 h-3.5 text-red-600" />
+                                                            <FaTrash className="w-3.5 h-3.5" />
                                                         </button>
                                                     </div>
                                                 )}
@@ -187,6 +258,7 @@ const PostTable = ({ filterOptions }: IPostTableProps) => {
                                 ))}
                             </tbody>
                         </table>
+                        <div ref={loadMoreRef} className="h-1.5" />
                     </div>
                 </div>
             </div >
