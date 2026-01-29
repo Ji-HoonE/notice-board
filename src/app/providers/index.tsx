@@ -1,4 +1,4 @@
-import ModalWrapper from "@/shared/ui/layout/ModalWrapper"
+import ModalProvider from "@/shared/ui/layout/ModalProvider"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
 import { createBrowserRouter, RouterProvider } from "react-router"
@@ -11,10 +11,9 @@ type Props = {
 export const Providers = ({ router, client }: Props) => {
     return (
         <QueryClientProvider client={client}>
-            <ModalWrapper>
-                <RouterProvider router={router} />
-                <ReactQueryDevtools />
-            </ModalWrapper>
+            <RouterProvider router={router} />
+            <ModalProvider />
+            {import.meta.env.DEV && <ReactQueryDevtools />}
         </QueryClientProvider>
     )
 }

@@ -26,10 +26,10 @@ const SideMenuLayout = ({ children }: AdminLayoutProps) => {
     const currentPageLabel = menuItems.find((item) => item.path === location.pathname)?.label || ''
 
     return (
-        <div className="min-h-screen">
-            <div className="flex">
+        <div className="h-screen overflow-hidden flex flex-col">
+            <div className="flex flex-1 min-h-0">
                 <aside
-                    className="w-64 bg-gray-900 shadow-sm border-r border-gray-800 min-h-screen"
+                    className="w-64 flex-shrink-0 bg-gray-900 shadow-sm border-r border-gray-800 h-full"
                     aria-label="사이드 네비게이션"
                 >
                     <div className="px-6 py-4 border-b border-gray-800 h-16 flex items-center">
@@ -61,9 +61,9 @@ const SideMenuLayout = ({ children }: AdminLayoutProps) => {
                         </ul>
                     </nav>
                 </aside>
-                <div className="flex-1 flex flex-col">
+                <div className="flex-1 flex flex-col min-h-0">
                     <header
-                        className="bg-white shadow-sm border-b border-gray-200 h-16"
+                        className="flex-shrink-0 bg-white shadow-sm border-b border-gray-200 h-16"
                         role="banner"
                     >
                         <div className="px-6 h-full flex items-center justify-between">
@@ -80,13 +80,11 @@ const SideMenuLayout = ({ children }: AdminLayoutProps) => {
                         </div>
                     </header>
                     <main
-                        className="flex-1 overflow-hidden p-6 flex flex-col min-h-0"
+                        className="flex-1 min-h-0 overflow-y-auto p-6"
                         role="main"
                         aria-label={currentPageLabel}
                     >
-                        <div className="flex-1 flex flex-col min-h-0">
-                            {children}
-                        </div>
+                        {children}
                     </main>
                 </div>
             </div>
